@@ -1,11 +1,8 @@
 package regexpset
 
-// regexpset is an extension of standard libary `regexp`.
-// It contains a set of regular expressions and provides methods
-// to do matching on this set.
+// regexpset is an extension of standard library `regexp`.
+// It contains a set of regular expressions and provides methods to do matching on this set.
 // It is equivalent to Rust [RegexSet](https://docs.rs/regex/1.3.9/regex/struct.RegexSet.html)
-//
-// TODO. Basic usage ...
 
 import (
 	"fmt"
@@ -54,7 +51,7 @@ func (rs RegexpSet) IsMatch(s string) bool {
 // IsMatchAt returns the same as `IsMatch`, but starts the
 // search at the given offset.
 //
-// NOTE. the significant of the starting point is that it
+// NOTE. the significance of the starting point is that it
 // takes the surrounding context into consideration. E.g.
 // `\A` anchor can only match when `start == 0`.
 func (rs RegexpSet) IsMatchAt(s string, start int) bool {
