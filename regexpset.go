@@ -18,7 +18,6 @@ import (
 
 // RegexpSet contains a set of regular expression set for matching.
 type RegexpSet struct {
-	// res []*regexp.Regexp
 	patterns []string
 }
 
@@ -52,6 +51,21 @@ func (rs RegexpSet) IsMatch(s string) bool {
 	return false
 }
 
+// IsMatchAt returns the same as `IsMatch`, but starts the
+// search at the given offset.
+//
+// NOTE. the significant of the starting point is that it
+// takes the surrounding context into consideration. E.g.
+// `\A` anchor can only match when `start == 0`.
+func (rs RegexpSet) IsMatchAt(s string, start int) bool {
+	runes := []rune(s) // TODO. should we use []rune or []byte???
+	if start < 0 || start >= len(runes) {
+		log.Fatalf("'start' index is out of bound. \n")
+	}
+	substring := string(runes[start:])
+	return rs.IsMatch(substring)
+}
+
 // Matches returns indexes of patterns those match input string
 func (rs RegexpSet) Matches(s string) (retVal SetMatches) {
 	var matches []bool = make([]bool, len(rs.patterns))
@@ -72,6 +86,32 @@ func (rs RegexpSet) Matches(s string) (retVal SetMatches) {
 		matchedAny: matchedAny,
 		matches:    matches,
 	}
+}
+
+//ReadMatchsAt returns the same as `Matches`, but start the search
+// at a given offset.
+//
+// NOTE. the significance of the starting point is that it takes
+// the surrounding context into consideration. For example, the
+// `/A` anchor can only match when `start == 0`.
+//
+// This method returns `true` if and only if at least one member of
+// `matches` is `true` after executing the set against input string.
+func (rs RegexpSet) ReadMatchesAt(s string, start int) bool {
+	runes := []rune(s) // TODO. should we use []rune or []byte???
+	if start < 0 || start >= len(runes) {
+		log.Fatalf("'start' index is out of bound. \n")
+	}
+
+	substring := string(runes[start:])
+	for _, pattern := range rs.patterns {
+		r := regexp.MustCompile(pattern)
+		if r.MatchString(substring) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // Len returns total number of regular expression in this set.
@@ -116,6 +156,16 @@ func (sm SetMatches) Len() int {
 	return len(sm.matches)
 }
 
+// Matches returns indexes of regular expression that matched.
+func (sm SetMatches) Matches() (retVal []int) {
+	for i, m := range sm.matches {
+		if m {
+			retVal = append(retVal, i)
+		}
+	}
+	return retVal
+}
+
 // Iter returns an iterator over the indexes in the regular expression that
 // matched.
 // This will always produce matches in ascending order of index, where the index
@@ -136,12 +186,18 @@ type SetMatchesIter struct {
 }
 
 // Next implement iterator for SetMatchesIter
-func (smi *SetMatchesIter) Next() (retVal bool, ok bool) {
+// It returns INDEX of regular expression pattern that
+// matched. It will return a INDEX value = -1 if not matched.
+func (smi *SetMatchesIter) Next() (retVal int, ok bool) {
 	if smi.nextIdx >= len(smi.matches) {
-		return false, false
+		return -1, false
 	}
 
-	retVal = smi.matches[smi.nextIdx]
+	if smi.matches[smi.nextIdx] {
+		retVal = smi.nextIdx
+	} else {
+		retVal = -1
+	}
 	smi.nextIdx++
 
 	return retVal, true
