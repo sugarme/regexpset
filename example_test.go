@@ -82,7 +82,7 @@ func ExampleRegexpSet_Matches() {
 	fmt.Println(set.Matches("foo@example.com").Matches())
 
 	// Output:
-	// [0, 1]
+	// [0 1]
 
 }
 
@@ -100,13 +100,10 @@ func ExampleRegexpSet_ReadMatchesAt() {
 	}
 
 	fmt.Println(set1.ReadMatchesAt("foo@example.com", 4))
-
-	// Output:
-	// true
-
 	fmt.Println(set2.ReadMatchesAt("foo@example.com", 4))
 
 	// Output:
+	// true
 	// false
 }
 
@@ -144,7 +141,7 @@ func ExampleRegexpSet_Iter() {
 	fmt.Println(got)
 
 	// Output:
-	// [0 1 2 3 4 6]
+	// [0 2 3 4 6]
 }
 
 func ExampleSetMatches_Matches() {

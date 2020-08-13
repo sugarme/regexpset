@@ -1,3 +1,5 @@
+package regexpset
+
 /*
 
 `regexpset` is an extension to Go standard library `regexp`. It contains a set
