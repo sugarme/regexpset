@@ -85,7 +85,7 @@ func (rs RegexpSet) Matches(s string) (retVal SetMatches) {
 	}
 }
 
-//ReadMatchsAt returns the same as `Matches`, but start the search
+//ReadMatchesAt returns the same as `Matches`, but start the search
 // at a given offset.
 //
 // NOTE. the significance of the starting point is that it takes
