@@ -1,8 +1,6 @@
-package regexpset
-
 /*
 
-`regexpset` is an extension to Go standard library `regexp`. It contains a set
+Package regexpset is an extension to Go standard library `regexp`. It contains a set
 of regular expression patterns and provides methods for matching on input
 string.
 
@@ -34,3 +32,4 @@ string.
     }
 
 */
+package regexpset
