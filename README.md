@@ -25,7 +25,7 @@ string.
 
         set, err := regexpset.NewRegexpSet(patterns)
         if err != nil {
-            t.Log(err)
+            log.Fatal(err)
         }
 
         setmatches := set.Matches("foobar")
